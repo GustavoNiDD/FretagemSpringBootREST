@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Meus Fretes</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d18161;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Meus Fretes</h1>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Entregador Frete ID</th>
+                <th>Frete ID</th>
+                <th>Distância</th>
+                <th>Veículo</th>
+                <th>Valor Bruto</th>
+                <th>Taxa</th>
+                <th>Valor Líquido</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="resultado : ${resultados}">
+                <td th:text="${resultado.entregador_frete_id}"></td>
+                <td th:text="${resultado.frete_id}"></td>
+                <td th:text="${resultado.distancia}"></td>
+                <td th:text="${resultado.Veiculo}"></td>
+                <td th:text="${resultado.valor_bruto}"></td>
+                <td th:text="${resultado.taxa}"></td>
+                <td th:text="${resultado.valor_liquido}"></td>
+                <td>
+                    <form th:action="@{/entregador/cancelarFrete}" method="post">
+                        <input type="hidden" th:value="${resultado.entregador_frete_id}" name="entregadorFreteId" />
+                        <button type="submit" class="btn btn-danger"
+                            th:data-frete-id="${resultado.frete_id}">Cancelar</button>
+                    </form>
+                    <form th:action="@{/entregador/mudarStatusParaEmAndamento}" method="post">
+                        <input type="hidden" th:value="${resultado.frete_id}" name="freteId" />
+                        <button type="submit" class="btn btn-warning">Em Andamento</button>
+                    </form>
+                    <form th:action="@{/entregador/mudarStatusParaConcluido}" method="post">
+                        <input type="hidden" th:value="${resultado.frete_id}" name="freteId" />
+                        <button type="submit" class="btn btn-success">Concluído</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btn-danger').click(function (e) {
+                e.preventDefault();
+
+                var entregadorFreteId = $(this).prev().val();
+                var freteId = $(this).data('frete-id');
+
+                $.ajax({
+                    url: '/entregador/cancelarFrete',
+                    type: 'POST',
+                    data: {
+                        entregadorFreteId: entregadorFreteId,
+                        freteId: freteId
+                    },
+                    success: function (response) {
+
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

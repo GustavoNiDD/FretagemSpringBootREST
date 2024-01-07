@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar produtos a frete</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Adicionar produtos a frete</h1>
+        <form th:action="@{/empresa/cadastrarProdutoFrete}" th:object="${produto}" method="post">
+            <div class="form-group">
+                <label for="frete">Escolha o Frete</label>
+                <select id="frete" th:field="*{frete.id}" class="form-control">
+                    <option th:each="frete : ${fretes}" th:value="${frete.id}" th:text="${frete.id}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="produto">Adicionar Produto (Caso não tenha produtos registrados na sua empresa, vá para o home e
+                    registre)</label>
+                <select id="produto" th:field="*{produto.id}" class="form-control">
+                    <option th:each="produto : ${produtos}" th:value="${produto.id}" th:text="${produto.nome}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quantidade">Quantidade desse produto</label>
+                <input type="number" th:field="*{quantidade}" id="quantidade" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    frete: {
+                        id: $("#frete").val()
+                    },
+                    produto: {
+                        id: $("#produto").val()
+                    },
+                    quantidade: $("#quantidade").val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/empresa/cadastrarProdutoFrete',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        alert("Produto adicionado ao frete com sucesso!");
+                        window.location.href = "/empresa/adicionarProdutosFrete";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        var error = JSON.parse(jqXHR.responseText);
+                        alert(error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

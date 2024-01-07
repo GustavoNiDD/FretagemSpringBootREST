@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Vincular Produto ao Pedido</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        table {
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="#" th:action="@{/usuario/vincularProdutoPedido}" method="post">
+        <div class="form-group">
+            <label for="produtoId">Produto:</label>
+            <select id="produtoId" name="produtoId" class="form-control">
+                <option th:each="produto : ${produtos}" th:value="${produto.id}" th:text="${produto.nome}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="pedidoId">Número do Pedido:</label>
+            <select id="pedidoId" name="pedidoId" class="form-control">
+                <option th:each="pedido : ${pedidos}" th:value="${pedido.id}" th:text="${pedido.id}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Vincular</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="produto : ${produtosUsuarioPedido}">
+                <td th:text="${produto.produtoUsuario.nome}"></td>
+                <td th:text="${produto.quantidade}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        window.onload = function () {
+            var url = new URL(window.location.href);
+            var pedidoId = url.pathname.split('/').pop();
+            if (pedidoId) {
+                document.getElementById('pedidoId').value = pedidoId;
+            }
+        }
+
+        document.getElementById('pedidoId').addEventListener('change', function () {
+            var pedidoId = this.value;
+            window.location.href = '/usuario/vincularProdutoPedido/' + pedidoId;
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var url = window.location.href;
+            var parts = url.split('/');
+            var partAfterThirdSlash = parts.slice(3).join('/');
+            if ("/" + partAfterThirdSlash == "/usuario/vincularProdutoPedido") {
+                var pedidoId = document.getElementById('pedidoId');
+                if (pedidoId && pedidoId.options.length > 0) {
+                    window.location.href = "/usuario/vincularProdutoPedido/" + pedidoId.options[0].value;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
