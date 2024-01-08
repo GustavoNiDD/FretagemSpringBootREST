@@ -51,9 +51,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 public class EmpresaRestControllerTest {
 
-    // @InjectMocks
-    // EmpresaRestController empresaRestController;
-
+        
     @MockBean
     EmpresaService empresaService;
 
@@ -78,46 +76,38 @@ public class EmpresaRestControllerTest {
     @InjectMocks
     EmpresaRestController empresaRestController;
 
-    // @Mock
-    // private EmpresaRestController empresaRestController;
-
+        
     @Test
     public void testCadastrar() throws Exception {
-        // Mock de dados
-        Empresa empresa = new Empresa();
+                Empresa empresa = new Empresa();
         empresa.setId(1L);
         when(empresaService.save(any(Empresa.class))).thenReturn(empresa);
 
-        // Executar a requisição
-        mockMvc.perform(post("/empresa/cadastrar")
+                mockMvc.perform(post("/empresa/cadastrar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(empresa)))
                 .andExpect(status().isOk());
 
-        // Verificar se o serviço foi chamado corretamente
-        verify(empresaService, times(1)).save(any(Empresa.class));
+                verify(empresaService, times(1)).save(any(Empresa.class));
     }
 
     @Test
     public void testCadastrarProduto() throws Exception {
-        // Crie uma empresa completa
-        Empresa empresa = new Empresa();
+                Empresa empresa = new Empresa();
         empresa.setNome("Empresa Teste");
         empresa.setPassword("senhaTeste");
         empresa.setUsername("teste@teste.com");
         empresa.setCnpj("12345678901234");
         empresa.setEndereco("Endereço Teste");
         empresa.setTelefone("123456789");
-        empresa.setDataCriacao(new Date(System.currentTimeMillis())); // Set to current date and time
-        empresa.setStatus(StatusEnum.ativo);
+        empresa.setDataCriacao(new Date(System.currentTimeMillis()));         empresa.setStatus(StatusEnum.ativo);
         Role role = new Role();
         role.setName("EMPRESA");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         empresa.setRoles(roles);
 
-        // Mock the authentication and security context
-        Set<GrantedAuthority> grantedAuthorities = roles.stream()
+                Set<GrantedAuthority> grantedAuthorities = roles.stream()
                 .map(r -> new SimpleGrantedAuthority(r.getName()))
                 .collect(Collectors.toSet());
 
@@ -126,19 +116,16 @@ public class EmpresaRestControllerTest {
         securityContext.setAuthentication(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        // Mock de dados do produto
-        Produto produto = new Produto();
+                Produto produto = new Produto();
         produto.setId(1L);
         when(produtoService.save(any(Produto.class))).thenReturn(produto);
 
-        // Executar a requisição para cadastrar o produto
-        mockMvc.perform(post("/empresa/cadastrarProduto")
+                mockMvc.perform(post("/empresa/cadastrarProduto")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(produto)))
                 .andExpect(status().isOk());
 
-        // Verificar se o serviço foi chamado corretamente
-        verify(produtoService, times(1)).save(any(Produto.class));
+                verify(produtoService, times(1)).save(any(Produto.class));
     }
 
     @Test
@@ -147,24 +134,21 @@ public class EmpresaRestControllerTest {
         dados.put("produtos", new ArrayList<>());
         dados.put("freteId", 1L);
 
-        // Crie uma empresa completa
-        Empresa empresa = new Empresa();
+                Empresa empresa = new Empresa();
         empresa.setNome("Empresa Teste");
         empresa.setPassword("senhaTeste");
         empresa.setUsername("teste@teste.com");
         empresa.setCnpj("12345678901234");
         empresa.setEndereco("Endereço Teste");
         empresa.setTelefone("123456789");
-        empresa.setDataCriacao(new Date(System.currentTimeMillis())); // Set to current date and time
-        empresa.setStatus(StatusEnum.ativo);
+        empresa.setDataCriacao(new Date(System.currentTimeMillis()));         empresa.setStatus(StatusEnum.ativo);
         Role role = new Role();
         role.setName("EMPRESA");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         empresa.setRoles(roles);
 
-        // Mock the authentication and security context
-        Set<GrantedAuthority> grantedAuthorities = roles.stream()
+                Set<GrantedAuthority> grantedAuthorities = roles.stream()
             .map(r -> new SimpleGrantedAuthority(r.getName()))
             .collect(Collectors.toSet());
         Authentication auth = new UsernamePasswordAuthenticationToken(empresa, null, grantedAuthorities);
@@ -172,8 +156,7 @@ public class EmpresaRestControllerTest {
         securityContext.setAuthentication(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        // Mock the services
-        when(produtoUsuarioService.findById(anyLong())).thenReturn(new ProdutoUsuario());
+                when(produtoUsuarioService.findById(anyLong())).thenReturn(new ProdutoUsuario());
         when(empresaService.getByUsername(anyString())).thenReturn(empresa);
         when(freteService.getById2(anyLong())).thenReturn(new Frete());
         when(produtoService.save(any(Produto.class))).thenReturn(new Produto());
@@ -189,24 +172,21 @@ public class EmpresaRestControllerTest {
 
     @Test
     public void testCadastrarProdutoFrete() throws Exception {
-        // Crie uma empresa completa
-        Empresa empresa = new Empresa();
+                Empresa empresa = new Empresa();
         empresa.setNome("Empresa Teste");
         empresa.setPassword("senhaTeste");
         empresa.setUsername("teste@teste.com");
         empresa.setCnpj("12345678901234");
         empresa.setEndereco("Endereço Teste");
         empresa.setTelefone("123456789");
-        empresa.setDataCriacao(new Date(System.currentTimeMillis())); // Set to current date and time
-        empresa.setStatus(StatusEnum.ativo);
+        empresa.setDataCriacao(new Date(System.currentTimeMillis()));         empresa.setStatus(StatusEnum.ativo);
         Role role = new Role();
         role.setName("EMPRESA");
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         empresa.setRoles(roles);
 
-        // Mock the authentication and security context
-        Set<GrantedAuthority> grantedAuthorities = roles.stream()
+                Set<GrantedAuthority> grantedAuthorities = roles.stream()
             .map(r -> new SimpleGrantedAuthority(r.getName()))
             .collect(Collectors.toSet());
         Authentication auth = new UsernamePasswordAuthenticationToken(empresa, null, grantedAuthorities);
@@ -214,8 +194,7 @@ public class EmpresaRestControllerTest {
         securityContext.setAuthentication(auth);
         SecurityContextHolder.setContext(securityContext);
 
-        // Test the /empresa/cadastrarProdutoFrete endpoint
-        ProdutosFrete produtoFrete = new ProdutosFrete();
+                ProdutosFrete produtoFrete = new ProdutosFrete();
         when(produtosFreteService.save(produtoFrete)).thenReturn(produtoFrete);
 
         mockMvc.perform(post("/empresa/cadastrarProdutoFrete")

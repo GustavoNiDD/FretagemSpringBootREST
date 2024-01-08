@@ -95,8 +95,7 @@ public class EmpresaControllerTest {
         String view = empresaController.empresaLogout(request, response);
         assertEquals("empresaLogar", view);
 
-        // Limpar o contexto após o teste
-        SecurityContextHolder.clearContext();
+                SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -126,8 +125,7 @@ public class EmpresaControllerTest {
         verify(model, times(3)).addAttribute(anyString(), any());
         assertEquals("empresaFrete", view);
     }
-    // Add more test methods here for other methods in EmpresaController
-
+    
     @Test
     public void testEmpresaProdutos() {
         Principal principal = Mockito.mock(Principal.class);

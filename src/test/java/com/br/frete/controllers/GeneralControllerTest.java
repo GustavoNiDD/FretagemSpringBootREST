@@ -40,8 +40,7 @@ public class GeneralControllerTest {
                     @Override
                     public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
                             throws Exception {
-                        // Não faz nada
-                    }
+                                            }
                 })
                 .build();
     }

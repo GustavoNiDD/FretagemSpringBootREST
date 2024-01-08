@@ -110,13 +110,11 @@ public class UsuarioControllerTest {
     @Test
     public void testVincularProdutoPedido() {
         Usuario usuario = new Usuario();
-        usuario.setId(1L); // Definindo um ID para o usuário
-    
+        usuario.setId(1L);     
         when(principal.getName()).thenReturn("username");
         when(produtoUsuarioService.getByUsuarioUsername(anyString())).thenReturn(Arrays.asList(new ProdutoUsuario()));
         when(pedidosUsuarioService.getByUsuarioUsername(anyString())).thenReturn(Arrays.asList(new PedidoUsuario()));
-        when(usuarioService.getByUsername(anyString())).thenReturn(usuario); // Retornando o usuário com ID
-        when(produtosUsuarioPedidoService.getByUsuarioId(anyLong())).thenReturn(Arrays.asList(new ProdutosUsuarioPedido()));
+        when(usuarioService.getByUsername(anyString())).thenReturn(usuario);         when(produtosUsuarioPedidoService.getByUsuarioId(anyLong())).thenReturn(Arrays.asList(new ProdutosUsuarioPedido()));
     
         String view = usuarioController.vincularProdutoPedido(model, principal);
     

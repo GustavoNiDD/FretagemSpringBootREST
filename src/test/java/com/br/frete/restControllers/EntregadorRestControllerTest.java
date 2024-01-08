@@ -58,9 +58,7 @@ public class EntregadorRestControllerTest {
     public void testCadastrar() {
         Entregador entregador = new Entregador();
         Veiculo tipoVeiculo = new Veiculo();
-        tipoVeiculo.setId(1L); // Set an ID for the Veiculo
-        entregador.setTipoVeiculo(tipoVeiculo); // Set the Veiculo for the Entregador
-
+        tipoVeiculo.setId(1L);         entregador.setTipoVeiculo(tipoVeiculo); 
         when(veiculoService.getById(tipoVeiculo.getId())).thenReturn(Optional.of(tipoVeiculo).get());
         when(entregadorService.save(entregador)).thenReturn(entregador);
 
