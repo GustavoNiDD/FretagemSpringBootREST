@@ -9,6 +9,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: your_database
+          MYSQL_USER: your_user
+          MYSQL_PASSWORD: your_password
+        ports:
+          - 3306/tcp
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -21,6 +32,9 @@ jobs:
 
     - name: Build Docker Image
       run: docker build -t gustavonid/fretes_infinity:latest .
+
+    - name: Check MySQL status
+      run: docker exec $(docker ps -qf "name=mysql") mysqladmin ping -u your_user -p"your_password"
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
