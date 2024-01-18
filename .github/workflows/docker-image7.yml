@@ -31,7 +31,8 @@ jobs:
         distribution: 'adopt'
 
     - name: Check MySQL status
-      run: docker exec $(docker ps -qf "name=mysql") ps aux | grep mysqld
+      run: docker exec $(docker ps -qf "name=mysql") mysqladmin ping -u your_user -p"your_password"
+
 
 
     - name: Check MySQL connection
