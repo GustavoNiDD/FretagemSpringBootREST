@@ -8,6 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -26,6 +36,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: gustavonid/fretes_infinity:tagname
+        tags: your_dockerhub_username/your_repository:tagname
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
