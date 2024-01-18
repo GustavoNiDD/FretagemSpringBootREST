@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar frete</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Adicionar frete</h1>
+        <form th:action="@{/frete/cadastrar}" th:object="${frete}" method="post">
+            <div class="form-group">
+                <label for="empresa">Empresa</label>
+                <select id="empresa" th:field="*{empresa.id}" class="form-control">
+                    <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nome}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <select id="usuario" th:field="*{usuario.id}" class="form-control">
+                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}" th:text="${usuario.nome}"></option>
+                </select>
+            </div>
+            <div class="form-group" fade>
+                <label for="statusEntrega">Status Entrega</label>
+                <select id="statusEntrega" th:field="*{statusEntrega}" class="form-control">
+                    <option th:value="pendente" th:text="pendente"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    empresa: { id: $("#empresa").val() },
+                    usuario: { id: $("#usuario").val() },
+                    statusEntrega: $("#statusEntrega").val()
+                };
+
+                var token = $("input[name='_csrf']").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/frete/cadastrar",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        alert("Frete cadastrado com sucesso!");
+                        window.location.href = "/empresa/home";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        var error = JSON.parse(jqXHR.responseText);
+                        alert(error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

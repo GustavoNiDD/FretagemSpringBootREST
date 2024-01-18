@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Entregador</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Cadastro de Entregador</h2>
+        <form method="POST" action="/entregador/cadastrar" th:object="${entregador}">
+
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" th:field="*{nome}">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" th:field="*{username}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}">
+            </div>
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" class="form-control" id="cpf" th:field="*{cpf}">
+            </div>
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input type="text" class="form-control" id="endereco" th:field="*{endereco}">
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="text" class="form-control" id="telefone" th:field="*{telefone}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" th:field="*{email}">
+            </div>
+            <div class="form-group">
+                <label for="dataNascimento">Data de Nascimento</label>
+                <input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}">
+            </div>
+            <div class="form-group">
+                <label for="veiculoId">Tipo de Veículo</label>
+                <select class="form-control" id="tipoVeiculo" th:field="*{tipoVeiculo.id}">
+                    <option th:each="tipoVeiculo : ${tiposVeiculo}" th:value="${tipoVeiculo.id}"
+                        th:text="${tipoVeiculo.tipoVeiculo}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    nome: $("#nome").val(),
+                    username: $("#username").val(),
+                    password: $("#password").val(),
+                    cpf: $("#cpf").val(),
+                    endereco: $("#endereco").val(),
+                    telefone: $("#telefone").val(),
+                    email: $("#email").val(),
+                    dataNascimento: $("#dataNascimento").val(),
+                    tipoVeiculo: { id: $("#tipoVeiculo").val() }
+                };
+
+                var token = $("input[name='_csrf']").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/entregador/cadastrar",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        alert("Entregador cadastrado com sucesso!");
+                        window.location.href = "/entregador/logar";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        var error = JSON.parse(jqXHR.responseText);
+                        alert(error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Fretes Concluídos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .table {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Fretes Concluídos</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Entregador</th>
+                    <th>Pedido</th>
+                    <th>Status</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+            <tbody>
+                <tr th:each="frete : ${fretesConcluidos}">
+                    <td th:text="${frete.id}"></td>
+                    <td th:text="${frete.empresa.nome}"></td>
+                    <td th:text="${frete.pedidoUsuario.id}"></td>
+                    <td th:text="${frete.statusEntrega}"></td>
+                </tr>
+            </tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

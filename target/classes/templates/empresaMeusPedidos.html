@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pedidos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .table {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lista de Pedidos</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID do Frete</th>
+                    <th>ID da Empresa</th>
+                    <th>ID do Pedido do Usuário</th>
+                    <th>Status da Entrega</th>
+                    <th>Produtos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="frete : ${pedidos}">
+                    <td th:text="${frete.id}"></td>
+                    <td th:text="${frete.empresa.id}"></td>
+                    <td th:text="${frete.pedidoUsuario.id}"></td>
+                    <td th:text="${frete.statusEntrega}"></td>
+                    <td>
+                        <button class="btn btn-primary produtos-btn" type="button"
+                            th:data-pedido-usuario-id="${frete.pedidoUsuario.id}"
+                            th:data-frete-id="${frete.id}">Produtos</button>
+                    </td>
+                </tr>
+                <tr class="produtos-tabela" style="display: none;">
+                    <td colspan="5">
+                        <form action="/empresa/salvarProdutosFrete" method="post" id="produtos-form">
+                            <table class="table produtos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Selecionar</th>
+                                        <th>ID do Produto</th>
+                                        <th>Nome do Produto</th>
+                                        <th>Quantidade</th>
+                                        <th>Quantidade registrada</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-primary">Confirmar itens selecionados</button>
+                        </form>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.produtos-btn').click(function () {
+                var pedidoUsuarioId = $(this).data('pedido-usuario-id');
+                var url = '/empresa/visualizarProdutosPorPedido/' + pedidoUsuarioId;
+
+
+                $('.produtos-table tbody').empty();
+
+                $.get(url)
+                    .done(function (resposta) {
+                        console.log('Resposta:', resposta);
+
+                        $.each(resposta, function (index, produtoQuantidade) {
+                            var produto = produtoQuantidade[0];
+                            var quantidade = produtoQuantidade[1];
+                            $('.produtos-table tbody').append('<tr><td><input type="checkbox" class="produto-checkbox" value="' + produto.id + '" /></td><td>' + produto.id + '</td><td>' + produto.nome + '</td><td>' + quantidade + '</td><td><input type="number" class="produto-quantidade" name="quantidade[' + produto.id + ']" min="0" max="' + quantidade + '" /></td></tr>');
+                        });
+
+
+                        $('.produtos-tabela').toggle();
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX error:', textStatus, errorThrown);
+                    });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.produtos-btn').click(function () {
+                var freteId = $(this).data('frete-id');
+                $('#produtos-form').submit(function (event) {
+                    event.preventDefault();
+                    var produtos = [];
+                    $('.produto-checkbox:checked').each(function () {
+                        var produtoId = $(this).val();
+                        var quantidade = $('input[name="quantidade[' + produtoId + ']"]').val();
+                        produtos.push({ id: produtoId, quantidade: quantidade });
+                    });
+                    $.ajax({
+                        url: '/empresa/salvarProdutosFrete',
+                        method: 'POST',
+                        data: JSON.stringify({ produtos: produtos, freteId: freteId }),
+                        contentType: 'application/json',
+                        success: function (resposta) {
+                            console.log('Resposta:', resposta);
+                            alert("Produtos registrados com sucesso!");
+                            window.location.reload();
+                        },
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

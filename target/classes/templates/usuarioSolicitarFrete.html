@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Frete</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        table {
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/usuario/solicitarFrete" method="post" onsubmit="return confirmSubmit();">
+        <div class="form-group">
+            <label for="pedido">Pedido</label>
+            <select id="pedido" name="pedido" class="form-control">
+                <option th:each="pedido : ${pedidos}" th:value="${pedido.id}" th:text="${pedido.id}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="empresa">Empresa</label>
+            <select id="empresa" name="empresa" class="form-control">
+                <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nome}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Solicitar Frete</button>
+    </form>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        function confirmSubmit() {
+            if (confirm('Você tem certeza que quer solicitar o frete para esta empresa?')) {
+                alert('Frete adicionado com sucesso!');
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+    <script>
+
+        window.onload = function() {
+            var url = new URL(window.location.href);
+            var empresaId = url.pathname.split('/').pop();
+            if (empresaId) {
+                document.getElementById('empresa').value = empresaId;
+            }
+    
+
+            var pedidoId = localStorage.getItem('pedidoId');
+            if (pedidoId) {
+                document.getElementById('pedido').value = pedidoId;
+            }
+        }
+    
+
+        document.getElementById('empresa').addEventListener('change', function() {
+            var empresaId = this.value;
+            window.location.href = '/usuario/solicitarFrete/' + empresaId;
+        });
+    
+
+        document.getElementById('pedido').addEventListener('change', function() {
+            var pedidoId = this.value;
+            localStorage.setItem('pedidoId', pedidoId);
+        });
+    </script>
+</body>
+</html>

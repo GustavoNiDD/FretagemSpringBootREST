@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <title>Meus Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Meus Produtos</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Frete ID</th>
+                <th>Empresa</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="frete : ${fretesUsuario}">
+                <td th:text="${frete.id}"></td>
+                <td th:text="${frete.empresa.nome}"></td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+
+</html>

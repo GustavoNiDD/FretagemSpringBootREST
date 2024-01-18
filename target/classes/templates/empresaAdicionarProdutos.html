@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cadastrar Produto</h1>
+        <form th:action="@{/empresa/cadastrarProduto}" th:object="${produto}" method="post">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" th:field="*{nome}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="valor">Valor</label>
+                <input type="number" step="0.01" id="valor" th:field="*{valor}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="peso">Peso</label>
+                <input type="number" step="0.01" id="peso" th:field="*{peso}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="descricaoProduto">Descrição do Produto</label>
+                <textarea id="descricaoProduto" th:field="*{descricaoProduto}" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="empresa">Empresa</label>
+                <select id="empresa" th:field="*{empresa.id}" class="form-control">
+                    <option th:each="empresa : ${empresas}" th:value="${empresa.id}" th:text="${empresa.nome}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    nome: $("#nome").val(),
+                    valor: $("#valor").val(),
+                    peso: $("#peso").val(),
+                    descricaoProduto: $("#descricaoProduto").val(),
+                    empresa: { id: $("#empresa").val() }
+                };
+
+                var token = $("input[name='_csrf']").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/empresa/cadastrarProduto",
+                    data: JSON.stringify(formData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    },
+                    success: function (result) {
+                        window.location.href = "/empresa/listarProdutos";
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

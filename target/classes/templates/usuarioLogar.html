@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #7198c0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin-top: 100px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h2>Login</h2>
+                <form action="/usuario/logar" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("form").on("submit", function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    username: $("#username").val(),
+                    password: $("#password").val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/usuario/logar',
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        alert("Usuário logou sucesso! (opção futura para interação com o usuário))");
+                        window.location.href = "/usuario/home";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        var error = JSON.parse(jqXHR.responseText);
+                        alert(error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
