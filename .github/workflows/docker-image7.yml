@@ -30,11 +30,13 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Wait for MySQL to start
+      run: sleep 30s
+
     - name: Check MySQL connection
       run: |
-        sleep 10s # Aguarda 10 segundos para garantir que o MySQL tenha tempo para iniciar
+        sleep 20s # Aguarda 20 segundos para garantir que o MySQL tenha tempo para iniciar
         docker exec $(docker ps -qf "name=mysql") mysql -u your_user -p"your_password" -e "SHOW DATABASES;"
-
 
     - name: Build with Maven
       run: mvn clean package
