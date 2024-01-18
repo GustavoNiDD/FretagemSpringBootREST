@@ -19,6 +19,11 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
+    - name: Wait for MySQL time
+      run: |
+        timeout 30s bash -c 'while ! echo > /dev/tcp/localhost/3306; do sleep 1; done'
+
+
     - name: Wait for MySQL
       run: |
         while ! timeout 1 bash -c "echo > /dev/tcp/localhost/3306"; do sleep 1; done
