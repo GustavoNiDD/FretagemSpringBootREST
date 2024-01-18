@@ -30,16 +30,18 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Wait before checking MySQL connection
-      run: sleep 30s
+    - name: Check MySQL status
+      run: docker exec $(docker ps -qf "name=mysql") service mysql status
 
     - name: Check MySQL connection
       run: |
-        sleep 20s # Aguarda 20 segundos para garantir que o MySQL tenha tempo para iniciar
+        sleep 60s # Aumentado para 60 segundos
         docker exec $(docker ps -qf "name=mysql") mysql -h localhost -u your_user -p"your_password" -e "SHOW DATABASES;" || true
 
     - name: Build with Maven
-      run: mvn clean install -X
+      run: |
+        env
+        mvn clean install -X
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
