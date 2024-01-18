@@ -32,7 +32,8 @@ jobs:
 
     - name: Check MySQL connection
       run: |
-        mysql -h localhost -u your_user -pyour_password -e "SHOW DATABASES;"
+        sleep 10s # Aguarda 10 segundos para garantir que o MySQL tenha tempo para iniciar
+        docker exec mysql mysql -u your_user -p"your_password" -e "SHOW DATABASES;"
 
     - name: Build with Maven
       run: mvn clean package
