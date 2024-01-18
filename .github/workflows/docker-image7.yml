@@ -19,6 +19,10 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
+    - name: Wait for MySQL
+      run: |
+        while ! timeout 1 bash -c "echo > /dev/tcp/localhost/3306"; do sleep 1; done
+
     - name: Build with Maven
       run: mvn clean install -B
 
