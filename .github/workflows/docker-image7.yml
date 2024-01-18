@@ -30,6 +30,10 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Check MySQL connection
+      run: |
+        mysql -h localhost -u your_user -pyour_password -e "SHOW DATABASES;"
+
     - name: Build with Maven
       run: mvn clean package
 
@@ -43,3 +47,6 @@ jobs:
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/fretes-infinity:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/fretes-infinity:latest
+
+    - name: View MySQL logs
+      run: docker logs mysql
