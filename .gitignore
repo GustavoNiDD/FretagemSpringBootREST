@@ -21,3 +21,6 @@ HELP.md
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
+
+# Ignore the target directory
+/target/
